@@ -83,7 +83,7 @@ public class Backtrack {
 
 	
 	// Algorithm 1
-	public static void enumeratePreferred1(FastGraph framework, Label[] labels, Set<Set<Integer>> extensions) { // done
+	public static void preferred1(FastGraph framework, Label[] labels, Set<Set<Integer>> extensions) { // done
 		
 		if ( isDeadEndLabelling(labels) ) return;
 		
@@ -105,10 +105,10 @@ public class Backtrack {
 		Label[] newLabels;
 		
 		newLabels = leftTransition(framework, labels, nextArgument);
-		enumeratePreferred1(framework, newLabels, extensions);
+		preferred1(framework, newLabels, extensions);
 		
 		newLabels = rightTransition(framework, labels, nextArgument);
-		enumeratePreferred1(framework, newLabels, extensions);
+		preferred1(framework, newLabels, extensions);
 	}
 
 
@@ -131,7 +131,7 @@ public class Backtrack {
 
 	
 	// Algorithm 2
-	public static void enumeratePreferred2(FastGraph framework, Label[] labels, Set<Set<Integer>> extensions) {
+	public static void preferred2(FastGraph framework, Label[] labels, Set<Set<Integer>> extensions) {
 				
 		if ( isHopelessLabelling(framework, labels) ) return;
 		
@@ -153,10 +153,10 @@ public class Backtrack {
 		Label[] newLabels;
 		
 		newLabels = leftTransition(framework, labels, nextArgument);
-		enumeratePreferred2(framework, newLabels, extensions);
+		preferred2(framework, newLabels, extensions);
 		
 		newLabels = rightTransition(framework, labels, nextArgument);
-		enumeratePreferred2(framework, newLabels, extensions);
+		preferred2(framework, newLabels, extensions);
 	}
 	
 
@@ -207,7 +207,7 @@ public class Backtrack {
 	
 
 	// Algorithm 3
-	public static void enumeratePreferred3(FastGraph framework, Label[] labels, Set<Set<Integer>> extensions) {
+	public static void preferred3(FastGraph framework, Label[] labels, Set<Set<Integer>> extensions) {
 				
 		if ( isHopelessLabelling(framework, labels) ) return;
 		
@@ -228,7 +228,7 @@ public class Backtrack {
 		
 		if ( isTerminalLabelling(labels) ) {
 			
-			enumeratePreferred3(framework, labels, extensions);
+			preferred3(framework, labels, extensions);
 		}
 		else {
 			
@@ -237,16 +237,16 @@ public class Backtrack {
 			Label[] newLabels;
 			
 			newLabels = leftTransition(framework, labels, nextArgument);
-			enumeratePreferred3(framework, newLabels, extensions);
+			preferred3(framework, newLabels, extensions);
 			
 			newLabels = rightTransition(framework, labels, nextArgument);
-			enumeratePreferred3(framework, newLabels, extensions);
+			preferred3(framework, newLabels, extensions);
 		}
 	}
 	
 
 	// Algorithm 4
-	public static void enumeratePreferred4(FastGraph framework, Label[] labels, Set<Set<Integer>> extensions) {
+	public static void preferred4(FastGraph framework, Label[] labels, Set<Set<Integer>> extensions) {
 		
 		propagateLabels(framework, labels);	
 
@@ -257,7 +257,7 @@ public class Backtrack {
 			int nextArgument = selectInfluential(framework, labels);
 			
 			Label[] newLabels = leftTransition(framework, labels, nextArgument);
-			if ( ! isHopelessLabelling(framework, newLabels) )  enumeratePreferred4(framework, newLabels, extensions);
+			if ( ! isHopelessLabelling(framework, newLabels) )  preferred4(framework, newLabels, extensions);
 			
 			labels = rightTransition(framework, labels, nextArgument);
 			if ( isHopelessLabelling(framework, labels) ) return;
@@ -277,14 +277,14 @@ public class Backtrack {
 
 
 	// Algorithm 5
-	public static void enumerateAdmissible(FastGraph framework, Label[] labels, Set<Set<Integer>> extensions) {
+	public static void admissible(FastGraph framework, Label[] labels, Set<Set<Integer>> extensions) {
 		
 		while ( ! isTerminalLabelling(labels) ) { 
 			
 			int nextArgument = selectInfluential(framework, labels);
 			
 			Label[] newLabels = leftTransition(framework, labels, nextArgument);
-			if ( ! isHopelessLabelling(framework, newLabels) )  enumerateAdmissible(framework, newLabels, extensions);
+			if ( ! isHopelessLabelling(framework, newLabels) )  admissible(framework, newLabels, extensions);
 			
 			labels = rightTransition(framework, labels, nextArgument);
 			if ( isHopelessLabelling(framework, labels) ) return;
@@ -315,7 +315,7 @@ public class Backtrack {
 
 	
 	// Algorithm 6
-	public static void enumerateComplete(FastGraph framework, Label[] labels, Set<Set<Integer>> extensions) {
+	public static void complete(FastGraph framework, Label[] labels, Set<Set<Integer>> extensions) {
 				
 		propagateLabels(framework, labels);	
 
@@ -326,7 +326,7 @@ public class Backtrack {
 			int nextArgument = selectInfluential(framework, labels);
 			
 			Label[] newLabels = leftTransition(framework, labels, nextArgument);
-			if ( ! isHopelessLabelling(framework, newLabels) )  enumerateComplete(framework, newLabels, extensions);
+			if ( ! isHopelessLabelling(framework, newLabels) )  complete(framework, newLabels, extensions);
 			
 			labels = rightTransition(framework, labels, nextArgument);
 			if ( isHopelessLabelling(framework, labels) ) return;

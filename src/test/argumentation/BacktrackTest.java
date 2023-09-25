@@ -115,7 +115,7 @@ public class BacktrackTest {
 	}
 	
 	@Test
-	public void enumeratePreferred1() {
+	public void preferred1() {
 		
 		Set<Set<Integer>> answer = new HashSet<Set<Integer>>();
 		answer.add(new HashSet<Integer>(Arrays.asList(new Integer[] {0, 2})));
@@ -125,7 +125,7 @@ public class BacktrackTest {
 		Arrays.fill(labels, Label.BLANK);		
 		Set<Set<Integer>> extensions = new HashSet<Set<Integer>>();
 		
-		Backtrack.enumeratePreferred1(framework, labels, extensions);
+		Backtrack.preferred1(framework, labels, extensions);
 		
 		assertEquals(1, extensions.size());
 		assertEquals(extensions, answer);
@@ -148,7 +148,7 @@ public class BacktrackTest {
 	}	
 	
 	@Test
-	public void enumeratePreferred2() {
+	public void preferred2() {
 		
 		Set<Set<Integer>> answer = new HashSet<Set<Integer>>();
 		answer.add(new HashSet<Integer>(Arrays.asList(new Integer[] {0, 2})));
@@ -158,7 +158,7 @@ public class BacktrackTest {
 		Arrays.fill(labels, Label.BLANK);		
 		Set<Set<Integer>> extensions = new HashSet<Set<Integer>>();
 		
-		Backtrack.enumeratePreferred2(framework, labels, extensions);
+		Backtrack.preferred2(framework, labels, extensions);
 		
 		assertEquals(1, extensions.size());
 		assertEquals(extensions, answer);
@@ -191,7 +191,7 @@ public class BacktrackTest {
 	}
 
 	@Test
-	public void enumeratePreferred3() {
+	public void preferred3() {
 		
 		Set<Set<Integer>> answer = new HashSet<Set<Integer>>();
 		answer.add(new HashSet<Integer>(Arrays.asList(new Integer[] {0, 2})));
@@ -201,14 +201,14 @@ public class BacktrackTest {
 		Arrays.fill(labels, Label.BLANK);		
 		Set<Set<Integer>> extensions = new HashSet<Set<Integer>>();
 		
-		Backtrack.enumeratePreferred3(framework, labels, extensions);
+		Backtrack.preferred3(framework, labels, extensions);
 		
 		assertEquals(1, extensions.size());
 		assertEquals(extensions, answer);
 	}
 
 	@Test
-	public void enumeratePreferred4() {
+	public void preferred4() {
 		
 		Set<Set<Integer>> answer = new HashSet<Set<Integer>>();
 		answer.add(new HashSet<Integer>(Arrays.asList(new Integer[] {0, 2})));
@@ -218,14 +218,14 @@ public class BacktrackTest {
 		Arrays.fill(labels, Label.BLANK);		
 		Set<Set<Integer>> extensions = new HashSet<Set<Integer>>();
 		
-		Backtrack.enumeratePreferred4(framework, labels, extensions);
+		Backtrack.preferred4(framework, labels, extensions);
 		
 		assertEquals(1, extensions.size());
 		assertEquals(extensions, answer);
 	}
 
 	@Test
-	public void enumerateAdmissible() {
+	public void admissible() {
 		
 		Set<Set<Integer>> answer = new HashSet<Set<Integer>>();
 		answer.add(new HashSet<Integer>(Arrays.asList(new Integer[] {0, 2})));
@@ -237,7 +237,7 @@ public class BacktrackTest {
 		Arrays.fill(labels, Label.BLANK);		
 		Set<Set<Integer>> extensions = new HashSet<Set<Integer>>();
 		
-		Backtrack.enumerateAdmissible(framework, labels, extensions);
+		Backtrack.admissible(framework, labels, extensions);
 
 		assertEquals(3, extensions.size());
 		assertEquals(extensions, answer);
@@ -256,7 +256,7 @@ public class BacktrackTest {
 	} 
 
 	@Test
-	public void enumerateComplete() {
+	public void complete() {
 		
 		Set<Set<Integer>> answer = new HashSet<Set<Integer>>();
 		answer.add(new HashSet<Integer>(Arrays.asList(new Integer[] {0, 2})));
@@ -267,7 +267,7 @@ public class BacktrackTest {
 		Arrays.fill(labels, Label.BLANK);		
 		Set<Set<Integer>> extensions = new HashSet<Set<Integer>>();
 		
-		Backtrack.enumerateComplete(framework, labels, extensions);
+		Backtrack.complete(framework, labels, extensions);
 		
 		assertEquals(2, extensions.size());
 		assertEquals(extensions, answer);

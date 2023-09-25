@@ -10,6 +10,8 @@ public class Frameworks {
 
 	public static FastGraph getFramework1() {
 
+		// This is the AAF from Fig. 3 of https://doi.org/10.1016/j.ijar.2016.07.013
+		
 		NodeStructure[] n = new NodeStructure[4];
 		EdgeStructure[] e = new EdgeStructure[5];
 		
