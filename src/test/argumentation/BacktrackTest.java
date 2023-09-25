@@ -18,12 +18,13 @@ import uk.ac.kent.dover.fastGraph.FastGraph;
 
 public class BacktrackTest {
 	
-	private FastGraph framework1;
+	private FastGraph framework1, framework2;
 
 	@Before
 	public void setUp() throws Exception {
 
 		framework1 = Frameworks.getFramework1();
+		framework2 = Frameworks.getFramework2();
 	}
 
 	@Test
@@ -191,6 +192,29 @@ public class BacktrackTest {
 	}
 
 	@Test
+	public void propagateLabels() {
+
+		FastGraph framework = framework1;
+		Label[] labels = new Label[framework.getNumberOfNodes()];
+		Arrays.fill(labels, Label.BLANK);	
+		Label[] copy = labels.clone();
+		Label[] answer1 = new Label[] {Label.IN, Label.OUT, Label.IN, Label.OUT};
+		Label[] answer2 = new Label[] {Label.IN, Label.OUT, Label.MUST_OUT, Label.IN};
+		
+		Backtrack.propagateLabels(framework, labels);		
+		assertArrayEquals(copy, labels);
+		
+		labels[1] = Label.MUST_OUT;
+		Backtrack.propagateLabels(framework, labels);
+		assertArrayEquals(answer1, labels);
+		
+		labels = copy;
+		labels[2] = Label.MUST_OUT;
+		Backtrack.propagateLabels(framework, labels);
+		assertArrayEquals(answer2, labels);
+	}
+
+	@Test
 	public void preferred3() {
 		
 		Set<Set<Integer>> answer = new HashSet<Set<Integer>>();
@@ -299,7 +323,7 @@ public class BacktrackTest {
 	}
 
 	@Test
-	public void enumerateStable() {
+	public void stable() {
 		
 		Set<Set<Integer>> answer = new HashSet<Set<Integer>>();
 		answer.add(new HashSet<Integer>(Arrays.asList(new Integer[] {0, 2})));
@@ -309,10 +333,46 @@ public class BacktrackTest {
 		Arrays.fill(labels, Label.BLANK);		
 		Set<Set<Integer>> extensions = new HashSet<Set<Integer>>();
 		
-		Backtrack.enumerateStable(framework, labels, extensions);
+		Backtrack.stable(framework, labels, extensions);
 		
 		assertEquals(1, extensions.size());
 		assertEquals(extensions, answer);
 	}
 	
+	@Test
+	public void setPlus() {
+
+		FastGraph framework = framework2;
+		Set<Integer> arguments = new HashSet<Integer>();
+		Set<Integer> attacked  = new HashSet<Integer>();
+		arguments.add(1);
+		attacked.add(0); attacked.add(2);
+		
+		assertEquals(attacked, Backtrack.setPlus(framework, arguments));
+	}
+	
+	@Test
+	public void semiStable() {
+		
+		Set<Set<Integer>> answer = new HashSet<Set<Integer>>();
+		answer.add(new HashSet<Integer>(Arrays.asList(new Integer[] {0})));
+		answer.add(new HashSet<Integer>(Arrays.asList(new Integer[] {1})));
+
+		FastGraph framework = framework2;
+		Label[] labels = new Label[framework.getNumberOfNodes()];
+		Arrays.fill(labels, Label.BLANK);		
+		Set<Set<Integer>> extensions = new HashSet<Set<Integer>>();
+		
+		Backtrack.preferred4(framework, labels, extensions);
+
+		assertEquals(2, extensions.size());
+		assertEquals(answer, extensions);
+		
+		answer.remove(new HashSet<Integer>(Arrays.asList(new Integer[] {0})));
+		extensions = new HashSet<Set<Integer>>();
+		Backtrack.semiStable(framework, labels, extensions);
+		assertEquals(answer, extensions);
+
+	}
+
 }

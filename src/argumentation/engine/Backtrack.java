@@ -1,5 +1,6 @@
 package argumentation.engine;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -363,7 +364,7 @@ public class Backtrack {
 
 	
 	// Algorithm 7
-	public static void enumerateStable(FastGraph framework, Label[] labels, Set<Set<Integer>> extensions) {
+	public static void stable(FastGraph framework, Label[] labels, Set<Set<Integer>> extensions) {
 		
 		propagateLabels(framework, labels);	
 
@@ -374,7 +375,7 @@ public class Backtrack {
 			int nextArgument = selectInfluential(framework, labels);
 			
 			Label[] newLabels = leftTransition(framework, labels, nextArgument);
-			if ( ! isHopelessLabelling(framework, newLabels) )  enumerateStable(framework, newLabels, extensions);
+			if ( ! isHopelessLabelling(framework, newLabels) )  stable(framework, newLabels, extensions);
 			
 			labels = rightTransitionStable(labels, nextArgument);
 			if ( isHopelessLabelling(framework, labels) ) return;
@@ -392,5 +393,38 @@ public class Backtrack {
 		return;
 	}
 
+	
+	// Algorithm 8
+	public static void semiStable(FastGraph framework, Label[] labels, Set<Set<Integer>> extensions) {
+		
+		Set<Set<Integer>> preferred = new HashSet<Set<Integer>>();
+		List<Set<Integer>> attacks = new ArrayList<Set<Integer>>();
+		List<Set<Integer>> candidates = new ArrayList<Set<Integer>>();
+		
+		preferred4(framework, labels, preferred);
 
+		preferred.stream().forEach(x -> {
+			Set<Integer> s = setPlus(framework, x);
+			s.addAll(x);
+			attacks.add(s);
+			candidates.add(x);
+		});
+
+		IntStream.range(0, attacks.size()).forEach(x -> {
+			
+			if ( attacks.stream().noneMatch( a -> a.containsAll(attacks.get(x)) && a.size() > attacks.get(x).size()) )  extensions.add(candidates.get(x));
+		});
+		
+		return;
+	}
+
+
+	public static Set<Integer> setPlus(FastGraph framework, Set<Integer> arguments) {
+		
+		// Return the set of arguments attacked by the given set.
+		
+		Set<Integer> results = new HashSet<Integer>();
+		arguments.stream().forEach( a -> Arrays.stream(framework.getNodeConnectingOutNodes(a)).forEach(x -> results.add(x)) );
+		return results;	
+	}
 }
