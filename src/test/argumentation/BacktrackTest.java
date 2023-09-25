@@ -23,8 +23,8 @@ public class BacktrackTest {
 	@Before
 	public void setUp() throws Exception {
 
-		framework1 = Frameworks.getFramework1();
-		framework2 = Frameworks.getFramework2();
+		framework1 = DungFrameworks.getFramework1();
+		framework2 = DungFrameworks.getFramework2();
 	}
 
 	@Test

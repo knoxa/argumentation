@@ -6,7 +6,7 @@ import uk.ac.kent.dover.fastGraph.EdgeStructure;
 import uk.ac.kent.dover.fastGraph.FastGraph;
 import uk.ac.kent.dover.fastGraph.NodeStructure;
 
-public class Frameworks {
+public class DungFrameworks {
 
 	public static FastGraph getFramework1() {
 
