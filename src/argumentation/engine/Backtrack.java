@@ -427,4 +427,46 @@ public class Backtrack {
 		arguments.stream().forEach( a -> Arrays.stream(framework.getNodeConnectingOutNodes(a)).forEach(x -> results.add(x)) );
 		return results;	
 	}
+
+	
+	public static Set<Integer> grounded(FastGraph framework) {
+		
+		// "Algorithms for Argumentation Semantics: Labeling Attacks as a Generalization of Labeling Arguments"
+		// S. Nofala, K. Atkinson, P. E. Dunne
+		// 	https://doi.org/10.1613/jair.4308
+		//Algorithm 7
+		
+		Set<Integer> extension = new HashSet<Integer>();
+		Label[] labels = new Label[framework.getNumberOfNodes()];
+		Arrays.fill(labels, Label.UNDEC);
+
+		while ( isUndecidedLabelling(framework, labels) ) { 
+						
+			List<Integer> undecided = IntStream.range(0, labels.length).filter(x -> labels[x] == Label.UNDEC).boxed().collect(Collectors.toList());
+
+			for ( Integer argument: undecided ) {
+				
+				if ( Arrays.stream(framework.getNodeConnectingInNodes(argument)).allMatch(x -> labels[x] == Label.OUT) ) {
+
+					labels[argument] = Label.IN;
+					List<Integer> out = Arrays.stream(framework.getNodeConnectingOutNodes(argument)).boxed().collect(Collectors.toList());
+					for (int x: out)  labels[x] = Label.OUT;
+				} 
+			}
+		}
+		
+		IntStream.range(0, labels.length).filter(x -> labels[x] == Label.IN).forEach( x -> extension.add(x) );
+		return extension;
+	}
+
+	private static boolean isUndecidedLabelling(FastGraph framework, Label[] labels) {
+		
+		return IntStream.range(0, labels.length)
+			.filter( x -> labels[x] == Label.UNDEC )
+			.anyMatch( x -> 
+					Arrays.stream(framework.getNodeConnectingInNodes(x))
+						.allMatch( node -> labels[node] == Label.OUT )
+			);
+	}
+
 }

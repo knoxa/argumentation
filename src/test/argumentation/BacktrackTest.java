@@ -372,7 +372,21 @@ public class BacktrackTest {
 		extensions = new HashSet<Set<Integer>>();
 		Backtrack.semiStable(framework, labels, extensions);
 		assertEquals(answer, extensions);
-
+	}
+	
+	@Test
+	public void grounded() {
+		
+		FastGraph framework = DungFrameworks.getFramework3();
+		Set<Integer> answer = new HashSet<Integer>();
+		answer.addAll(Arrays.asList(new Integer[] {0,2}));
+		
+		Set<Integer> extension = Backtrack.grounded(framework);
+		assertEquals(answer, extension);
+		
+		framework = framework1;
+		extension = Backtrack.grounded(framework);
+		assertTrue(extension.isEmpty());
 	}
 
 }

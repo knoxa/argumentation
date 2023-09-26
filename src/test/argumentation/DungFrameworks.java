@@ -52,4 +52,21 @@ public class DungFrameworks {
 		return framework;
 	}
 
+	public static FastGraph getFramework3() {
+
+		// This AAF has a grounded extension: [0, 2]
+		
+		NodeStructure[] n = new NodeStructure[3];
+		EdgeStructure[] e = new EdgeStructure[1];
+		
+		n[0] = new NodeStructure(0, "a", 0, (byte) 0, (byte) 0);
+		n[1] = new NodeStructure(1, "b", 0, (byte) 0, (byte) 0);
+		n[2] = new NodeStructure(2, "c", 0, (byte) 0, (byte) 0);
+		
+		e[0] = new EdgeStructure(0, "", 0, (byte) 0, (byte) 0, n[0].getId(), n[1].getId());		
+
+		FastGraph framework = FastGraph.structureFactory("AAF3", (byte) 0, Arrays.asList(n), Arrays.asList(e), true);
+		return framework;
+	}
+
 }
