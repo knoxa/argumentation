@@ -61,4 +61,10 @@ public class FastMapUtils {
 		return labels;
  	}
 
+ 
+    public static boolean hasArguments(FastGraph framework) {
+    	
+    	return IntStream.range(0, framework.getNumberOfNodes()).anyMatch(x -> (framework.getNodeType(x) == FastArgumentMap.CA_NODE && framework.getNodeType(x) == FastArgumentMap.RA_NODE));
+    }
+
 }
