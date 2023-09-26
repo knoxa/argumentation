@@ -25,8 +25,8 @@ public class PresumptiveAAF {
 
 	public static FastGraph makeArgumentFramework(FastGraph aif, Comparator<Integer> preference) {
 		
-		// The arguments are the S-Nodes
-		int[] arguments = IntStream.range(0, aif.getNumberOfNodes()).filter(x -> (aif.getNodeType(x) != FastArgumentMap.I_NODE) && (aif.getNodeType(x) != FastArgumentMap.L_NODE)).toArray();
+		// The arguments are the RA-Nodes and CA-Nodes
+		int[] arguments = IntStream.range(0, aif.getNumberOfNodes()).filter(x -> (aif.getNodeType(x) == FastArgumentMap.RA_NODE) || (aif.getNodeType(x) == FastArgumentMap.CA_NODE)).toArray();
 
 		// The node labels in the Dung AAF are the same as the corresponding AIF S-Nodes
 		List<String> labels = Arrays.stream(arguments)

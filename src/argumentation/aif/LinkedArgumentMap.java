@@ -9,6 +9,7 @@ import java.util.Map;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.RDF;
 
 import uk.ac.kent.dover.fastGraph.EdgeStructure;
@@ -30,6 +31,7 @@ public class LinkedArgumentMap implements FastArgumentMap {
     private Map<String, Resource> labelToResource = new HashMap<String, Resource>();
     private Map<String, Byte> labelToType = new HashMap<String, Byte>();
     private Map<String, Integer> labelToNodeNumber = new HashMap<String, Integer>();
+    private Map<String, String> claimText = new HashMap<String, String>();
 
     @Override
 	public FastGraph getGraph() {
@@ -54,9 +56,8 @@ public class LinkedArgumentMap implements FastArgumentMap {
 		this.model = model;
 		initialize();
 	}
+
 	
-	
-    	
 	private void initialize() {
 		
 		information = model.listStatements(null, RDF.type,  AIF.iNode).mapWith(x -> x.getSubject()).toList();
@@ -70,6 +71,7 @@ public class LinkedArgumentMap implements FastArgumentMap {
         labelToResource = new HashMap<String, Resource>();
         labelToType = new HashMap<String, Byte>();
         labelToNodeNumber = new HashMap<String, Integer>();
+        claimText = new HashMap<String, String>();
         
         addToLookups(resourceToLabel, labelToResource, information, labelToType, labelToNodeNumber, I_NODE);
         addToLookups(resourceToLabel, labelToResource, locution, labelToType, labelToNodeNumber, L_NODE);
@@ -91,6 +93,9 @@ public class LinkedArgumentMap implements FastArgumentMap {
              resourceTolabel.put(resource, label);
              labelToType.put(label, type);
              labelToNodeNumber.put(label, index++);
+             
+             Statement claim = resource.getProperty(AIF.claimText);            
+             if ( claim != null )  claimText.put(label, claim.toString());
         }
     }
 	
@@ -129,5 +134,14 @@ public class LinkedArgumentMap implements FastArgumentMap {
 
 		return edges;
 	}
+
+	@Override
+	public Map<String, String> getClaimText() {
+
+		return claimText;
+	}
+	
+	
+	
 
 }

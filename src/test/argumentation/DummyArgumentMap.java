@@ -1,6 +1,8 @@
 package test.argumentation;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import argumentation.aif.FastArgumentMap;
 import uk.ac.kent.dover.fastGraph.EdgeStructure;
@@ -34,4 +36,11 @@ public class DummyArgumentMap implements FastArgumentMap {
 		return framework;
 	}
 
+	@Override
+	public Map<String, String> getClaimText() {
+		
+		Map<String, String> claimText = new HashMap<String, String>();
+		return claimText;
+	}
+	
 }
