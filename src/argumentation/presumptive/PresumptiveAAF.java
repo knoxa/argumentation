@@ -1,4 +1,4 @@
-package argumentation.aif;
+package argumentation.presumptive;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import argumentation.aif.FastArgumentMap;
 import uk.ac.kent.dover.fastGraph.EdgeStructure;
 import uk.ac.kent.dover.fastGraph.FastGraph;
 import uk.ac.kent.dover.fastGraph.NodeStructure;
@@ -19,17 +20,7 @@ public class PresumptiveAAF {
 
 	public static FastGraph makeArgumentFramework(FastGraph aif) {
 	
-		// Make a comparator that expresses no preference
-		Comparator<Integer> preference = new Comparator<Integer>() {
-
-			@Override
-			public int compare(Integer attacker, Integer attacked) {
-				
-				return 0;
-			}
-		};
-		
-		return makeArgumentFramework(aif, preference);
+		return makeArgumentFramework(aif, new PreferenceDefault());
 	}
 
 	public static FastGraph makeArgumentFramework(FastGraph aif, Comparator<Integer> preference) {
