@@ -95,7 +95,7 @@ public class LinkedArgumentMap implements FastArgumentMap {
              labelToNodeNumber.put(label, index++);
              
              Statement claim = resource.getProperty(AIF.claimText);            
-             if ( claim != null )  claimText.put(label, claim.toString());
+             if ( claim != null )  claimText.put(label, claim.getString());
         }
     }
 	
