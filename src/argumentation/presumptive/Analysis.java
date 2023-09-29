@@ -100,4 +100,29 @@ public class Analysis {
 		return partitions;		
 	}
 
+	
+	public static Map<String, Set<Set<Integer>>>  getInformationObjects(FastGraph aif, FastGraph framework, Set<Set<Integer>> extensions) {
+		
+		// Treat each AIF information node as an object, with the extensions that contain it (i.e. for which it is acceptable information)
+		// as its attributes. The result is a Map of extensions keyed by information node label.
+		// The results are suitable for formal component analysis
+
+		Map<String, Set<Set<Integer>>> map = new HashMap<String, Set<Set<Integer>>>();
+        
+        for ( Set<Integer> extension: extensions ) {
+        	
+         	Set<String> acceptableInfo = getAcceptableInformation(aif, framework, extension);
+        	
+        	for ( String info: acceptableInfo ) {
+        		
+        		Set<Set<Integer>> extents = map.get(info);
+        		if ( extents == null )   extents = new HashSet<Set<Integer>>();
+        		extents.add(extension);
+        		map.put(info, extents);
+        	}
+        }
+		
+		return map;
+	}
+
 }
