@@ -1,9 +1,5 @@
 package test.lattice;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,18 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
 import org.junit.Before;
 import org.junit.Test;
 
 import argumentation.aif.FastArgumentMap;
-import argumentation.aif.LinkedArgumentMap;
 import argumentation.engine.Backtrack;
 import argumentation.engine.Label;
 import argumentation.presumptive.Analysis;

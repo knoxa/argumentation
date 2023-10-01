@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import graph.GraphUtils;
 import uk.ac.kent.dover.fastGraph.FastGraph;
 
 public class FormalConceptAnalysis {
