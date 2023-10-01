@@ -3,13 +3,17 @@ package argumentation.aif;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.vocabulary.RDF;
 
 import uk.ac.kent.dover.fastGraph.EdgeStructure;
@@ -47,10 +51,21 @@ public class LinkedArgumentMap implements FastArgumentMap {
 
 		return FastGraph.structureFactory("AIF", (byte) 0, nodes, edges, true);
 	}
+    
+    
+	public LinkedArgumentMap() {
+		
+	}
+
+	public LinkedArgumentMap(Model model) {
+		super();
+		this.setModel(model);
+	}
 
 	public Model getModel() {
 		return model;
 	}
+	
 
 	public void setModel(Model model) {
 		this.model = model;
@@ -135,13 +150,55 @@ public class LinkedArgumentMap implements FastArgumentMap {
 		return edges;
 	}
 
+	
 	@Override
 	public Map<String, String> getClaimText() {
 
 		return claimText;
 	}
-	
-	
-	
 
+	
+	public LinkedArgumentMap getSubArgumentFromLabels(Set<String> labels) {
+		
+		Set<Resource> resources = new HashSet<Resource>();
+		labels.stream().forEach(x -> resources.add(labelToResource.get(x)));		
+		return getSubArgument(resources);
+	}
+	
+	
+    public LinkedArgumentMap getSubArgument(Set<Resource> nodes) {
+        
+        Model model = this.getModel();
+        
+        StmtIterator iter;
+        List<Statement> subgraph = new ArrayList<Statement>();
+        
+        // get the literal properties for each wanted node
+        
+        for (Resource node: nodes) {
+             
+             iter = node.listProperties();
+             
+             while ( iter.hasNext() ) {
+                   
+                   Statement statement = iter.next();
+                   if ( statement.getObject().isLiteral() || statement.getPredicate().equals(RDF.type) )  subgraph.add(statement);
+             }
+        }
+        
+        // get properties that link wanted nodes
+        
+        iter = model.listStatements();
+
+        while ( iter.hasNext() ) {
+             
+             Statement statement = iter.next();               
+             if ( nodes.contains(statement.getSubject()) && statement.getObject().isResource() )  subgraph.add(statement);
+       }
+        
+     Model newModel = ModelFactory.createDefaultModel();
+     newModel.add(subgraph);
+     
+     return new LinkedArgumentMap(newModel);
+  }
 }
