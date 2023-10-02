@@ -48,12 +48,12 @@ public class Analysis {
  	}
 
 
-	public static Set<String> getDisbelievedInformation(FastGraph aif, Set<Integer> extension) {
+	public static Set<String> getDisbelievedInformation(FastGraph aif, FastGraph framework, Set<Integer> extension) {
 
 		Set<String> labels = new HashSet<String>();
 		Map<String, Integer> map = FastMapUtils.getLabelToNodeNumber(aif);
 		
-		Set<String> extensionLabels = FastMapUtils.extensionLabels(aif, extension);
+		Set<String> extensionLabels = FastMapUtils.extensionLabels(framework, extension);
 		
  		for ( String label: extensionLabels ) {
 		   

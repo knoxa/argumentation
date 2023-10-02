@@ -27,7 +27,7 @@ public class Report {
  	 	   
  	 	   Set<String> acceptable = Analysis.getAcceptableInformation(graph, framework, extension);
 	       out.println("The acceptable I-nodes are: " + acceptable);
-	       out.println("We don't believe: " + Analysis.getDisbelievedInformation(graph, extension));
+	       out.println("... and we don't believe: " + Analysis.getDisbelievedInformation(graph, framework, extension));
         }
 	}
 
@@ -72,9 +72,13 @@ public class Report {
 	     	   out.println("The grounded extension is empty. Nothing is certain.");
 	     	   return;
 	       }
-
-	 	  Set<String> groundedLabels = FastMapUtils.extensionLabels(framework, grounded);	 	  
-	 	  out.println("The grounded extension is: " + groundedLabels);
+	       else {
+	    	   
+	    	   Set<String> groundedLabels = FastMapUtils.extensionLabels(framework, grounded);	 	  
+	    	   out.println("The grounded extension is: " + groundedLabels);
+	 	 	   Set<String> acceptable = Analysis.getAcceptableInformation(aif.getGraph(), framework, grounded);
+		       out.println("The acceptable I-nodes are: " + acceptable);
+	       }
 	}
 	
 
