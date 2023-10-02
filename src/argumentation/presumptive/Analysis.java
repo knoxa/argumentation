@@ -103,9 +103,8 @@ public class Analysis {
 	
 	public static Map<String, Set<Set<Integer>>>  getInformationObjects(FastGraph aif, FastGraph framework, Set<Set<Integer>> extensions) {
 		
-		// Treat each AIF information node as an object, with the extensions that contain it (i.e. for which it is acceptable information)
-		// as its attributes. The result is a Map of extensions keyed by information node label.
-		// The results are suitable for formal component analysis
+		// Treat each AIF information node as an intent, with the extensions that contain it (i.e. for which it is acceptable information)
+		// as its extent. The result is a Map of extensions keyed by information node label, suitable for Formal Concept Analysis.
 
 		Map<String, Set<Set<Integer>>> map = new HashMap<String, Set<Set<Integer>>>();
         
