@@ -67,4 +67,26 @@ public class FastMapUtils {
     	return IntStream.range(0, framework.getNumberOfNodes()).anyMatch(x -> (framework.getNodeType(x) == FastArgumentMap.CA_NODE && framework.getNodeType(x) == FastArgumentMap.RA_NODE));
     }
 
+
+    public static double entropy(FastGraph aif, Set<String> extension) {
+ 		
+		double total = Double.valueOf(extension.size());
+ 		if ( total == 0.0 ) return 0.0;
+ 		
+ 		double ca = 0.0, ra = 0.0;		
+		ca += IntStream.range(0, aif.getNumberOfNodes())
+				.filter(x -> extension.contains(aif.getNodeLabel(x)))
+				.filter(x -> (aif.getNodeType(x) == FastArgumentMap.CA_NODE)).count();
+		ra += IntStream.range(0, aif.getNumberOfNodes())
+				.filter(x -> extension.contains(aif.getNodeLabel(x)))
+				.filter(x -> (aif.getNodeType(x) == FastArgumentMap.RA_NODE)).count();
+
+ 		ra = ra/total; ca = ca/total;
+ 		
+ 		double result = ra > 0.0 ? ra*Math.log(ra)/Math.log(2) : 0.0;
+ 		result += ca > 0.0 ? ca*Math.log(ca)/Math.log(2) : 0.0;
+ 		result = result < 0.0 ? -result : result;
+ 		return result;
+ 	}
+    
 }
