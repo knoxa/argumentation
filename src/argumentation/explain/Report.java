@@ -23,11 +23,13 @@ public class Report {
         
         for (Set<Integer> extension: extensions ) {
         	
- 	 	   out.printf("Extension %d is: %s\n", ++n, FastMapUtils.extensionLabels(framework, extension));
+ 	 	   out.printf("Extension %d is: %s\n", ++n, extension);
+ 	 	   out.printf("... with labels: %s\n", FastMapUtils.extensionLabels(framework, extension));
  	 	   
  	 	   Set<String> acceptable = Analysis.getAcceptableInformation(graph, framework, extension);
 	       out.println("The acceptable I-nodes are: " + acceptable);
 	       out.println("... and we don't believe: " + Analysis.getDisbelievedInformation(graph, framework, extension));
+	       out.println();
         }
 	}
 
