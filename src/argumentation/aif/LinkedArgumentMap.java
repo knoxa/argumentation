@@ -201,10 +201,18 @@ public class LinkedArgumentMap implements FastArgumentMap {
              Statement statement = iter.next();               
              if ( nodes.contains(statement.getSubject()) && statement.getObject().isResource() )  subgraph.add(statement);
        }
-        
-     Model newModel = ModelFactory.createDefaultModel();
-     newModel.add(subgraph);
-     
-     return new LinkedArgumentMap(newModel);
-  }
+
+        Model newModel = ModelFactory.createDefaultModel();
+        newModel.add(subgraph);
+
+        return new LinkedArgumentMap(newModel);
+    }
+    
+ 	public Set<String> getLabelsForResources(Set<Resource> resources) {
+ 		
+ 		Set<String> labels = new HashSet<String>();		
+ 		for ( Resource resource: resources ) labels.add(resourceToLabel.get(resource));		
+ 		return labels;
+ 	}
+    
 }

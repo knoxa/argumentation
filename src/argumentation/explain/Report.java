@@ -77,4 +77,16 @@ public class Report {
 	 	  out.println("The grounded extension is: " + groundedLabels);
 	}
 	
+
+	public static void printPartitions(Map<Set<String>, Set<Set<Integer>>> partitions, PrintWriter report) {
+ 		
+ 		report.println("Number of partitions: " + partitions.size());
+ 		
+ 		for ( Set<String> key: partitions.keySet() ) {
+ 			
+ 			report.printf("partition: %s (%d extensions)\n", key, partitions.get(key).size());
+ 		}
+ 		
+ 	}
+	
 }
