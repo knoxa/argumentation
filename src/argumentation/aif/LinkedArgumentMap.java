@@ -36,10 +36,16 @@ public class LinkedArgumentMap implements FastArgumentMap {
     private Map<String, Byte> labelToType = new HashMap<String, Byte>();
     private Map<String, Integer> labelToNodeNumber = new HashMap<String, Integer>();
     private Map<String, String> claimText = new HashMap<String, String>();
+    
+    FastGraph graph;
 
     @Override
 	public FastGraph getGraph() {
-	
+		return graph;
+	}
+    
+    private void buildGraph() {
+    	
 		List<NodeStructure> nodes = makeNodes(resourceToLabel, labelToType, labelToNodeNumber);
 		List<EdgeStructure> edges = makeEdges(model, resourceToLabel, labelToNodeNumber);
 
@@ -48,10 +54,9 @@ public class LinkedArgumentMap implements FastArgumentMap {
 				return n1.getId() - n2.getId();
 			}
 		});
-
-		return FastGraph.structureFactory("AIF", (byte) 0, nodes, edges, true);
-	}
-    
+		
+		graph = FastGraph.structureFactory("AIF", (byte) 0, nodes, edges, true);
+    }
     
 	public LinkedArgumentMap() {
 		
@@ -93,8 +98,9 @@ public class LinkedArgumentMap implements FastArgumentMap {
         addToLookups(resourceToLabel, labelToResource, rules, labelToType, labelToNodeNumber, RA_NODE);
         addToLookups(resourceToLabel, labelToResource, conflicts, labelToType, labelToNodeNumber, CA_NODE);		
         addToLookups(resourceToLabel, labelToResource, rephrases, labelToType, labelToNodeNumber, MA_NODE);		
-        addToLookups(resourceToLabel, labelToResource, transitions, labelToType, labelToNodeNumber, TA_NODE);		
-
+        addToLookups(resourceToLabel, labelToResource, transitions, labelToType, labelToNodeNumber, TA_NODE);
+        
+        buildGraph();
 	}	
 	
     private void addToLookups(Map<Resource, String> resourceTolabel, Map<String, Resource> labelToResource, List<Resource> resources, Map<String, Byte> labelToType, Map<String, Integer> labelToNodeNumber, byte type) {
