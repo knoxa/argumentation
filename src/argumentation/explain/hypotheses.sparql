@@ -1,0 +1,14 @@
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix aif: <http://www.arg.dundee.ac.uk/aif#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+select ?inode ?claim
+
+WHERE {
+
+	<urn:eleatics:hypothesis> skos:narrower ?inode .
+	?inode rdf:type ?type .
+	FILTER (?type IN (aif:I-node, aif:L-node)) .
+	?inode aif:claimText ?claim .
+}
