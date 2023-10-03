@@ -11,6 +11,7 @@ import java.util.Set;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
@@ -214,5 +215,107 @@ public class LinkedArgumentMap implements FastArgumentMap {
  		for ( Resource resource: resources ) labels.add(resourceToLabel.get(resource));		
  		return labels;
  	}
+    
+    public void validate() {
+    	
+    	if ( model == null ) {
+    		System.err.println("model is null");
+    		return;
+    	}
+    		
+		ResIterator resourceIterator;
+		StmtIterator iterator;
+
+		resourceIterator = model.listResourcesWithProperty(RDF.type, AIF.iNode);
+		
+		for ( Resource inode: resourceIterator.toSet() ) {
+			
+			if ( inode.getProperty(AIF.claimText) == null ) {
+				
+				System.err.println("No claim text for: " + inode);
+			}
+			
+			if ( resourceToLabel.get(inode) == null ) {
+				
+				System.err.println("No label for: " + inode);
+			}
+		}
+
+
+		resourceIterator = model.listResourcesWithProperty(RDF.type, AIF.lNode);
+		
+		for ( Resource lnode: resourceIterator.toSet() ) {
+			
+			if ( lnode.getProperty(AIF.claimText) == null ) {
+				
+				System.err.println("No claim text for: " + lnode);
+			}
+			
+			if ( resourceToLabel.get(lnode) == null ) {
+				
+				System.err.println("No label for: " + lnode);
+			}
+		}
+
+		resourceIterator = model.listResourcesWithProperty(RDF.type, AIF.caNode);
+		
+		for ( Resource snode: resourceIterator.toSet() ) {
+			
+			if ( snode.getProperty(AIF.hasConclusion) == null ) {
+				
+				System.err.println("No conclusion: " + snode);
+			}
+		}
+
+		resourceIterator = model.listResourcesWithProperty(RDF.type, AIF.taNode);
+		
+		for ( Resource tanode: resourceIterator.toSet() ) {
+			
+			if ( tanode.getProperty(AIF.endLocution) == null ) {
+				
+				System.err.println("No target locution: " + tanode);
+			}
+		}
+
+		iterator = model.listStatements(null, AIF.hasPremise, (RDFNode) null);
+
+		for ( Statement s: iterator.toSet() ) {
+			
+			if ( !s.getObject().isResource() ) {
+				
+				System.err.println("The object of an aif:Premise is not Resource: " + s + "[" + s.getObject() + "]");
+			}
+			Resource obj  = s.getObject().asResource();
+			Resource subj = s.getSubject().asResource();
+			
+			if ( resourceToLabel.get(obj) == null ) {
+				
+				System.err.println("The object of an aif:Premise is not an AIF I-node or S-node: " + s);
+			}
+			
+			if ( resourceToLabel.get(subj) == null ) {
+				
+				System.err.println("The subject of an aif:Premise is not an AIF I-node or S-node: " + s);
+			}
+		}
+
+		iterator = model.listStatements(null, AIF.hasConclusion, (RDFNode) null);
+
+		for ( Statement s: iterator.toSet() ) {
+			
+			Resource obj  = s.getObject().asResource();
+			Resource subj = s.getSubject().asResource();
+			
+			if ( resourceToLabel.get(obj) == null ) {
+				
+				System.err.println("The object of an aif:Conclusion is not an AIF I-node or S-node: " + s);
+			}
+			
+			if ( resourceToLabel.get(subj) == null ) {
+				
+				System.err.println("The subject of an aif:Conclusion is not an AIF I-node or S-node: " + s);
+			}
+		}
+	}
     
 }
