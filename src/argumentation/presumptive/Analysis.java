@@ -124,4 +124,13 @@ public class Analysis {
 		return map;
 	}
 
+	
+	public static Set<String> findConclusions(FastGraph aif, Set<String> labels) {
+		
+		// Given a set of AIF information node labels, return those where the node is only a conclusion (i.e. no out edges)
+		
+		Set<String> conclusions = FastMapUtils.getConclusions(aif);
+		conclusions.retainAll(labels);
+		return conclusions;
+	}
 }

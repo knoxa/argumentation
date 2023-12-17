@@ -30,6 +30,8 @@ public class Report {
 	       out.println("The acceptable I-nodes are: " + acceptable);
 	       out.println("... and we don't believe: " + Analysis.getDisbelievedInformation(graph, framework, extension));
 	       out.println();
+	       
+	       out.println("The acceptable conclusions are: " + Analysis.findConclusions(aif.getGraph(), acceptable));
         }
 	}
 
