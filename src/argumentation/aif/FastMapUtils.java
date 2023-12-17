@@ -49,6 +49,18 @@ public class FastMapUtils {
 		return labels;
  	}
 
+    
+ 	public static Set<String> getConclusions(FastGraph aif) {
+
+		Set<String> labels = new HashSet<String>();
+		
+		IntStream.range(0, aif.getNumberOfNodes())
+		.filter(x -> (aif.getNodeType(x) == FastArgumentMap.I_NODE || aif.getNodeType(x) == FastArgumentMap.L_NODE) && aif.getNodeOutDegree(x) == 0)
+		.forEach(x -> labels.add(aif.getNodeLabel(x)));
+
+		return labels;
+ 	}
+
  	
  	public static Set<String> getInformation(FastGraph aif) {
 
