@@ -26,7 +26,7 @@ public class PresumptiveAAF {
 	public static FastGraph makeArgumentFramework(FastGraph aif, Comparator<Integer> preference) {
 		
 		// The arguments are the RA-Nodes and CA-Nodes
-		int[] arguments = IntStream.range(0, aif.getNumberOfNodes()).filter(x -> (aif.getNodeType(x) == FastArgumentMap.RA_NODE) || (aif.getNodeType(x) == FastArgumentMap.CA_NODE)).toArray();
+		int[] arguments = IntStream.range(0, aif.getNumberOfNodes()).filter(x -> (aif.getNodeType(x) == FastArgumentMap.RA_NODE) || (aif.getNodeType(x) == FastArgumentMap.CA_NODE) || (aif.getNodeType(x) == FastArgumentMap.MA_NODE)).toArray();
 
 		// The node labels in the Dung AAF are the same as the corresponding AIF S-Nodes
 		List<String> labels = Arrays.stream(arguments)
@@ -55,7 +55,7 @@ public class PresumptiveAAF {
 			int attackerNode = nodeMap.get(aif.getNodeLabel(attacker));
 			
 			for ( int attacked: attackedSet ) {
-				
+
 				int attackedNode = nodeMap.get(aif.getNodeLabel(attacked));
 				
 				if (preference.compare(attacker, attacked) >= 0) {
@@ -75,7 +75,7 @@ public class PresumptiveAAF {
 		Set<Integer> attacked = new HashSet<Integer>();
 		
 		byte attackerType = aif.getNodeType(attacker);		
-		if ( attackerType == FastArgumentMap.TA_NODE ) return attacked;
+		if ( attackerType != FastArgumentMap.RA_NODE && attackerType != FastArgumentMap.CA_NODE ) return attacked;
 		
 		// Get attacks between S-nodes. A CA-node attacks: an S-node that has the CA-node conclusion as the S-node premise (undermine); the S-node that is 
 		// its conclusion (undercut); any RA-node that shares its conclusion (rebut). A RA-node attacks any CA-node that shares its conclusion (rebut),
