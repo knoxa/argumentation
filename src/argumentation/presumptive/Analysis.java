@@ -76,8 +76,8 @@ public class Analysis {
   	
 		return labels;
  	}
-	
-	
+
+
 	public static Map<Set<String>, Set<Set<Integer>>> partitionExtensions(FastGraph aif, FastGraph framework, Set<Set<Integer>> extensions, Set<String> hypotheses) {
 		
         // Partition extensions according to the hypotheses they contain.
@@ -133,4 +133,5 @@ public class Analysis {
 		conclusions.retainAll(labels);
 		return conclusions;
 	}
+
 }

@@ -73,6 +73,20 @@ public class FastMapUtils {
 		return labels;
  	}
 
+ 	
+ 	public static Set<String> getRewritten(FastGraph aif) {
+ 		
+ 		// condition: Each MA-mode has one incoming edge.
+
+		Set<String> labels = new HashSet<String>();
+		
+		IntStream.range(0, aif.getNumberOfNodes())
+		.filter(x -> (aif.getNodeType(x) == FastArgumentMap.MA_NODE))
+		.forEach(x -> labels.add(aif.getNodeLabel(aif.getNodeConnectingInNodes(x)[0])));
+
+		return labels;
+ 	}
+
  
     public static boolean hasArguments(FastGraph framework) {
     	
