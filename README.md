@@ -4,9 +4,9 @@ This is about [argumentation](https://dstl.github.io/eleatics/doc/argumentation/
 
 It includes an implementation of backtracking algorithms<sup> [1]</sup> that operate on Dung's _argumentation framework_<sup> [2]</sup> model of the acceptability of arguments.
 
-We want to reason about _argument maps_ expressed as Argument Interchange Format (AIF)<sup> [3]</sup>, so we need a way to translate an AIF argument map to a Dung argumentation framework (DAF) first in order to evaluate it. We use the _presumptive arguments_ method<sup> [4]</sup>.
+I want to reason about _argument maps_ expressed as Argument Interchange Format (AIF)<sup> [3]</sup>, so I need a way to translate an AIF argument map to a Dung argumentation framework (DAF) first in order to evaluate it. I use the _presumptive arguments_ method<sup> [4]</sup>.
 
-Argument maps and frameworks are *graphs*. We use **Dover**<sup> [5]</sup> for modelling and manipulating graphs.
+Argument maps and frameworks are *graphs*. I use **Dover**<sup> [5]</sup> for modelling and manipulating graphs.
 
 ### References 
 
