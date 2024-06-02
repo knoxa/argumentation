@@ -7,10 +7,15 @@ import java.util.List;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 import uk.ac.kent.dover.fastGraph.FastGraph;
 
 public class GraphUtils {
+	
+	public static final String GRAPHML_NAMESPACE = "http://graphml.graphdrawing.org/xmlns";
 
 	public static void induceGraph(FastGraph g, HashSet<Integer> nodes, HashSet<Integer> edges) {
 		
@@ -83,4 +88,86 @@ public class GraphUtils {
  		}
  	}
 
+ 	
+ 	public static void serializeAsGraphML(FastGraph graph, ContentHandler ch) throws SAXException {
+ 		
+ 		ch.startDocument();
+		ch.startElement(GraphUtils.GRAPHML_NAMESPACE, "graphml", "graphml", new AttributesImpl());
+		
+		AttributesImpl idlAttr = new AttributesImpl();
+		idlAttr.addAttribute("", "id",  "id", "String",  "id");
+		idlAttr.addAttribute("", "for",  "for", "String",  "node");
+		idlAttr.addAttribute("", "attr.name",  "attr.name", "String",  "id");
+		idlAttr.addAttribute("", "attr.type",  "attr.type", "String",  "string");
+		ch.startElement(GraphUtils.GRAPHML_NAMESPACE, "key", "key", idlAttr);
+		ch.endElement(GraphUtils.GRAPHML_NAMESPACE, "key", "key");
+		
+		AttributesImpl labelAttr = new AttributesImpl();
+		labelAttr.addAttribute("", "id",  "id", "String",  "label-node");
+		labelAttr.addAttribute("", "for",  "for", "String",  "node");
+		labelAttr.addAttribute("", "attr.name",  "attr.name", "String",  "label");
+		labelAttr.addAttribute("", "attr.type",  "attr.type", "String",  "string");
+		ch.startElement(GraphUtils.GRAPHML_NAMESPACE, "key", "key", labelAttr);
+		ch.endElement(GraphUtils.GRAPHML_NAMESPACE, "key", "key");
+		
+		labelAttr = new AttributesImpl();
+		labelAttr.addAttribute("", "id",  "id", "String",  "label-edge");
+		labelAttr.addAttribute("", "for",  "for", "String",  "edge");
+		labelAttr.addAttribute("", "attr.name",  "attr.name", "String",  "label");
+		labelAttr.addAttribute("", "attr.type",  "attr.type", "String",  "string");
+		ch.startElement(GraphUtils.GRAPHML_NAMESPACE, "key", "key", labelAttr);
+		ch.endElement(GraphUtils.GRAPHML_NAMESPACE, "key", "key");
+		
+		ch.startElement(GraphUtils.GRAPHML_NAMESPACE, "graph", "graph", new AttributesImpl());
+
+		for ( int i = 0; i < graph.getNumberOfNodes(); i++ ) {
+			
+			String id = String.valueOf(i);
+
+			AttributesImpl attr = new AttributesImpl();
+			attr.addAttribute("", "id",  "id", "String",  id);
+			ch.startElement(GraphUtils.GRAPHML_NAMESPACE, "node", "node", attr);
+			
+			attr = new AttributesImpl();
+			attr.addAttribute("", "key",  "key", "String",  "id");
+			ch.startElement(GraphUtils.GRAPHML_NAMESPACE, "data", "data", attr);
+			ch.characters(id.toCharArray(), 0, id.length());
+			ch.endElement(GraphUtils.GRAPHML_NAMESPACE, "data", "data");
+
+			String label = graph.getNodeLabel(i);
+			attr = new AttributesImpl();
+			attr.addAttribute("", "key",  "key", "String",  "label-node");
+			ch.startElement(GraphUtils.GRAPHML_NAMESPACE, "data", "data", attr);
+			ch.characters(label.toCharArray(), 0, label.length());
+			ch.endElement(GraphUtils.GRAPHML_NAMESPACE, "data", "data");
+			
+			ch.endElement(GraphUtils.GRAPHML_NAMESPACE, "node", "node");
+		}
+ 		
+ 		for ( int i = 0; i < graph.getNumberOfEdges(); i++ ) {
+		
+ 			int n1= graph.getEdgeNode1(i);
+ 			int n2= graph.getEdgeNode2(i);
+ 			String label = graph.getEdgeLabel(i);
+ 			
+			AttributesImpl attr = new AttributesImpl();
+			attr.addAttribute("", "source",  "source", "String",  String.valueOf(n1));
+			attr.addAttribute("", "target",  "target", "String",  String.valueOf(n2));
+			
+			ch.startElement(GraphUtils.GRAPHML_NAMESPACE, "edge", "edge", attr);
+
+			attr = new AttributesImpl();
+			attr.addAttribute("", "key",  "key", "String",  "label-edge");
+			ch.startElement(GraphUtils.GRAPHML_NAMESPACE, "data", "data", attr);
+			ch.characters(label.toCharArray(), 0, label.length());
+			ch.endElement(GraphUtils.GRAPHML_NAMESPACE, "data", "data");
+
+			ch.endElement(GraphUtils.GRAPHML_NAMESPACE, "edge", "edge");
+ 		}
+ 		
+ 		ch.endElement(GraphUtils.GRAPHML_NAMESPACE, "graph", "graph");
+
+		ch.endElement(GraphUtils.GRAPHML_NAMESPACE, "graphml", "graphml");
+ 		ch.endDocument();
+ 	}
 }
