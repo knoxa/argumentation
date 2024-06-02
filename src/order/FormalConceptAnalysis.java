@@ -1,7 +1,5 @@
 package order;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -13,18 +11,11 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.sax.SAXTransformerFactory;
-import javax.xml.transform.sax.TransformerHandler;
-import javax.xml.transform.stream.StreamResult;
+import java.util.Set;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-
-import java.util.Set;
 
 import graph.GraphUtils;
 import uk.ac.kent.dover.fastGraph.FastGraph;
@@ -178,7 +169,7 @@ public class FormalConceptAnalysis {
 		}
 	}
 
-	public static <A, E> void order(Map<A, Set<E>> map) {
+	public static <A, E> Lattice<E, A> order(Map<A, Set<E>> map) {
 		
 		// The algorithm described in section 3.14 of "Introduction to Lattices and Order".
 		// Some comments below refer to the text.
@@ -224,13 +215,7 @@ public class FormalConceptAnalysis {
 				addAttributeToTable(attribute, attributes, tableRow);
 			}			
 		}
-		
-		System.out.println("\n============\n");
-		
-		printTable(extents, attributes);
-		
-		System.out.println("\n============\n");
-		
+
 		// Step 2 - linking rows of the extents and attributes table to make a lattice
 		
 		// The lattice is a Map, with positions of an extent in "extents" as both keys and values.
@@ -258,13 +243,9 @@ public class FormalConceptAnalysis {
 			for ( Entry<Integer, Set<E>> entry: maximalRemaining ) extentMap.remove(entry.getKey());
 		}
 		
-		System.out.println("lattice - " + lattice);
-		
+		// Limit objects to the earliest concept - Move this?
+
 		FastGraph graph = FastLattice.getGraph(lattice);
-		//GraphUtils.dumpGraph(graph, "lattice.txt");
-
-		// Limit objects to the earliest concept
-
 		List<Set<E>> belowList = new ArrayList<Set<E>>();
 		
 		for ( int i = 0; i < extents.size(); i++ ) {
@@ -282,29 +263,12 @@ public class FormalConceptAnalysis {
 		
 		//
 		
-		SAXTransformerFactory tf = (SAXTransformerFactory) TransformerFactory.newInstance();
-		try {
-			TransformerHandler serializer = tf.newTransformerHandler();
-			StreamResult result = new StreamResult(new FileOutputStream("out.graphml"));
-			serializer.setResult(result);
-			//GraphUtils.serializeAsGraphML(graph, serializer);
-			FormalConceptAnalysis.serializeAsGraphML(lattice, extents, attributes, serializer);
-			
-		}
-		catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Lattice<E, A> result = new Lattice<E, A>();
+		result.setExtents(extents);
+		result.setAttributes(attributes);
+		result.setPreorder(lattice);
 	
-		printTable(extents, attributes);
+		return result;
 	}
 
 	
