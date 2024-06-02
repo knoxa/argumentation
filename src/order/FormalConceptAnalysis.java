@@ -1,5 +1,7 @@
-package lattice;
+package order;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,8 +13,20 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.stream.StreamResult;
+
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
+
 import java.util.Set;
 
+import graph.GraphUtils;
 import uk.ac.kent.dover.fastGraph.FastGraph;
 
 public class FormalConceptAnalysis {
@@ -248,22 +262,49 @@ public class FormalConceptAnalysis {
 		
 		FastGraph graph = FastLattice.getGraph(lattice);
 		//GraphUtils.dumpGraph(graph, "lattice.txt");
+
+		// Limit objects to the earliest concept
+
+		List<Set<E>> belowList = new ArrayList<Set<E>>();
 		
 		for ( int i = 0; i < extents.size(); i++ ) {
-		
+			
 			Set<E> below = new HashSet<E>();
-			Set<E> extent = extents.get(i);
-			
 			Arrays.stream(graph.getNodeConnectingInNodes(i)).forEach( x -> below.addAll(extents.get(x)) );
- 			extent.removeAll(below);
-			
+			belowList.add(below);
 		}
 
 		for ( int i = 0; i < extents.size(); i++ ) {
 			
-			System.out.printf("(2) %3d: %s, %s\n", i, extents.get(i), attributes.get(i));
+			Set<E> extent = extents.get(i);
+			extent.removeAll(belowList.get(i));
 		}
-
+		
+		//
+		
+		SAXTransformerFactory tf = (SAXTransformerFactory) TransformerFactory.newInstance();
+		try {
+			TransformerHandler serializer = tf.newTransformerHandler();
+			StreamResult result = new StreamResult(new FileOutputStream("out.graphml"));
+			serializer.setResult(result);
+			//GraphUtils.serializeAsGraphML(graph, serializer);
+			FormalConceptAnalysis.serializeAsGraphML(lattice, extents, attributes, serializer);
+			
+		}
+		catch (TransformerConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+		printTable(extents, attributes);
 	}
 
 	
@@ -273,6 +314,89 @@ public class FormalConceptAnalysis {
 			
 			System.out.printf("%3d: %s - %s\n", i, extents.get(i), attributes.get(i));
 		}
+	}
+	
+	public static <A, E> void serializeAsGraphML(Map<Integer, Set<Integer>> lattice, List<Set<E>> extents, Map<Integer, Set<A>> attributes, ContentHandler ch) throws SAXException {
+		
+ 		ch.startDocument();
+		ch.startElement(GraphUtils.GRAPHML_NAMESPACE, "graphml", "graphml", new AttributesImpl());
+		
+		AttributesImpl idlAttr = new AttributesImpl();
+		idlAttr.addAttribute("", "id",  "id", "String",  "id");
+		idlAttr.addAttribute("", "for",  "for", "String",  "node");
+		idlAttr.addAttribute("", "attr.name",  "attr.name", "String",  "id");
+		idlAttr.addAttribute("", "attr.type",  "attr.type", "String",  "string");
+		ch.startElement(GraphUtils.GRAPHML_NAMESPACE, "key", "key", idlAttr);
+		ch.endElement(GraphUtils.GRAPHML_NAMESPACE, "key", "key");
+		
+		AttributesImpl labelAttr = new AttributesImpl();
+		labelAttr.addAttribute("", "id",  "id", "String",  "extents");
+		labelAttr.addAttribute("", "for",  "for", "String",  "node");
+		labelAttr.addAttribute("", "attr.name",  "attr.name", "String",  "extents");
+		labelAttr.addAttribute("", "attr.type",  "attr.type", "String",  "string");
+		ch.startElement(GraphUtils.GRAPHML_NAMESPACE, "key", "key", labelAttr);
+		ch.endElement(GraphUtils.GRAPHML_NAMESPACE, "key", "key");
+		
+		labelAttr = new AttributesImpl();
+		labelAttr.addAttribute("", "id",  "id", "String",  "attributes");
+		labelAttr.addAttribute("", "for",  "for", "String",  "node");
+		labelAttr.addAttribute("", "attr.name",  "attr.name", "String",  "attributes");
+		labelAttr.addAttribute("", "attr.type",  "attr.type", "String",  "string");
+		ch.startElement(GraphUtils.GRAPHML_NAMESPACE, "key", "key", labelAttr);
+		ch.endElement(GraphUtils.GRAPHML_NAMESPACE, "key", "key");
+
+		ch.startElement(GraphUtils.GRAPHML_NAMESPACE, "graph", "graph", new AttributesImpl());
+		
+		for ( int i = 0; i < extents.size(); i++ ) {
+			
+			String id = String.valueOf(i);
+
+			AttributesImpl attr = new AttributesImpl();
+			attr.addAttribute("", "id",  "id", "String",  id);
+			ch.startElement(GraphUtils.GRAPHML_NAMESPACE, "node", "node", attr);
+			
+			attr = new AttributesImpl();
+			attr.addAttribute("", "key",  "key", "String",  "id");
+			ch.startElement(GraphUtils.GRAPHML_NAMESPACE, "data", "data", attr);
+			ch.characters(id.toCharArray(), 0, id.length());
+			ch.endElement(GraphUtils.GRAPHML_NAMESPACE, "data", "data");
+
+			Set<A> attributeSet = attributes.get(i);
+			String attributesLabel = attributeSet == null ? "[]" : attributeSet.toString();			
+			attr = new AttributesImpl();
+			attr.addAttribute("", "key",  "key", "String",  "attributes");
+			ch.startElement(GraphUtils.GRAPHML_NAMESPACE, "data", "data", attr);
+			ch.characters(attributesLabel.toCharArray(), 0, attributesLabel.length());
+			ch.endElement(GraphUtils.GRAPHML_NAMESPACE, "data", "data");
+
+			Set<E> extentSet = extents.get(i);
+			String extentsLabel = extentSet == null ? "[]" : extentSet.toString();			
+			attr = new AttributesImpl();
+			attr.addAttribute("", "key",  "key", "String",  "extents");
+			ch.startElement(GraphUtils.GRAPHML_NAMESPACE, "data", "data", attr);
+			ch.characters(extentsLabel.toCharArray(), 0, extentsLabel.length());
+			ch.endElement(GraphUtils.GRAPHML_NAMESPACE, "data", "data");
+			
+			ch.endElement(GraphUtils.GRAPHML_NAMESPACE, "node", "node");
+		}
+		
+		for ( Integer source: lattice.keySet() ) {
+			
+			for (Integer target: lattice.get(source) ) {
+				
+	 			
+				AttributesImpl attr = new AttributesImpl();
+				attr.addAttribute("", "source",  "source", "String",  String.valueOf(source));
+				attr.addAttribute("", "target",  "target", "String",  String.valueOf(target));
+				ch.startElement(GraphUtils.GRAPHML_NAMESPACE, "edge", "edge", attr);
+				ch.endElement(GraphUtils.GRAPHML_NAMESPACE, "edge", "edge");
+			}
+		}
+ 		
+ 		ch.endElement(GraphUtils.GRAPHML_NAMESPACE, "graph", "graph");
+
+		ch.endElement(GraphUtils.GRAPHML_NAMESPACE, "graphml", "graphml");
+ 		ch.endDocument();
 	}
 }
 
