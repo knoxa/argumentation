@@ -1,22 +1,34 @@
 package test.lattice;
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.AttributesImpl;
 
 import argumentation.aif.FastArgumentMap;
 import argumentation.engine.Backtrack;
 import argumentation.engine.Label;
 import argumentation.presumptive.Analysis;
 import argumentation.presumptive.PresumptiveAAF;
-import lattice.FormalConceptAnalysis;
+import order.ContextBuilder;
+import order.FormalConceptAnalysis;
 import test.argumentation.DummyArgumentMap;
 import uk.ac.kent.dover.fastGraph.FastGraph;
 
@@ -49,6 +61,77 @@ public class FCATest {
 		System.out.println(order2);
 		
 		FormalConceptAnalysis.order(textbook);
+	}
+	
+	@Test
+	public void contextBuilder() {
+		
+		ContextBuilder builder = new ContextBuilder();
+		AttributesImpl attr;
+		String attribute;
+		
+		try {
+			builder.startDocument();
+			builder.startElement("", "context", "context", null);
+
+			attr = new AttributesImpl();
+			attr.addAttribute("", "name",  "name", "String", "temporary");
+			builder.startElement("", "object", "object", attr);
+
+			builder.startElement("", "attribute", "attribute", attr);
+			attribute = "puddle";
+			builder.characters(attribute.toCharArray(), 0, attribute.length());
+			builder.endElement("", "attribute", "attribute");
+
+			builder.endElement("", "object", "object");
+
+			attr = new AttributesImpl();
+			attr.addAttribute("", "name",  "name", "String", "running");
+			builder.startElement("", "object", "object", attr);
+
+			builder.startElement("", "attribute", "attribute", attr);
+			attribute = "canal";
+			builder.characters(attribute.toCharArray(), 0, attribute.length());
+			builder.endElement("", "attribute", "attribute");
+
+			builder.startElement("", "attribute", "attribute", attr);
+			attribute = "channel";
+			builder.characters(attribute.toCharArray(), 0, attribute.length());
+			builder.endElement("", "attribute", "attribute");
+
+			builder.endElement("", "object", "object");
+
+			builder.endElement("", "context", "context");
+			builder.endDocument();
+		}
+		catch (SAXException e) {
+			e.printStackTrace();
+		}
+		
+		Map<String, Set<String>> context = builder.getContext();
+		assertEquals(2, context.size());
+		assertEquals(2, context.get("running").size());
+		
+		builder = new ContextBuilder();
+		
+		try {
+			SAXParserFactory factory = SAXParserFactory.newInstance();
+			SAXParser parser = factory.newSAXParser();
+			XMLReader reader = parser.getXMLReader();
+			reader.setContentHandler(builder);
+			reader.parse("src\\test\\lattice\\water.xml");
+		}
+		catch (ParserConfigurationException | SAXException e) {
+			e.printStackTrace();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		context = builder.getContext();
+		assertEquals(6, context.size());
+		
+		//FormalConceptAnalysis.order(context);
 	}
 	
 	public static Map<Integer, Set<String>> getExampleTextBook() {

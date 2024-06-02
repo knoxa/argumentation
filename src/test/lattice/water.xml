@@ -1,0 +1,86 @@
+<context>
+	<object name="canal">
+		<attribute>running</attribute>
+		<attribute>constant</attribute>
+	</object>
+	<object name="channel">
+		<attribute>running</attribute>
+		<attribute>constant</attribute>
+	</object>
+	<object name="lagoon">
+		<attribute>natural</attribute>
+		<attribute>stagnant</attribute>
+		<attribute>constant</attribute>
+		<attribute>maritime</attribute>
+	</object>
+	<object name="lake">
+		<attribute>natural</attribute>
+		<attribute>stagnant</attribute>
+		<attribute>constant</attribute>
+	</object>
+	<object name="maar">
+		<attribute>natural</attribute>
+		<attribute>stagnant</attribute>
+		<attribute>constant</attribute>
+	</object>
+	<object name="puddle">
+		<attribute>temporary</attribute>
+		<attribute>natural</attribute>
+		<attribute>stagnant</attribute>
+	</object>
+	<object name="pond">
+		<attribute>natural</attribute>
+		<attribute>stagnant</attribute>
+		<attribute>constant</attribute>
+	</object>
+	<object name="pool">
+		<attribute>natural</attribute>
+		<attribute>stagnant</attribute>
+		<attribute>constant</attribute>
+	</object>
+	<object name="reservoir">
+		<attribute>stagnant</attribute>
+		<attribute>constant</attribute>
+	</object>
+	<object name="river">
+		<attribute>running</attribute>
+		<attribute>natural</attribute>
+		<attribute>constant</attribute>
+	</object>
+	<object name="rivulet">
+		<attribute>running</attribute>
+		<attribute>natural</attribute>
+		<attribute>constant</attribute>
+	</object>
+	<object name="runnel">
+		<attribute>running</attribute>
+		<attribute>natural</attribute>
+		<attribute>constant</attribute>
+	</object>
+	<object name="sea">
+		<attribute>natural</attribute>
+		<attribute>stagnant</attribute>
+		<attribute>constant</attribute>
+		<attribute>maritime</attribute>
+	</object>
+	<object name="stream">
+		<attribute>running</attribute>
+		<attribute>natural</attribute>
+		<attribute>constant</attribute>
+	</object>
+	<object name="tarn">
+		<attribute>natural</attribute>
+		<attribute>stagnant</attribute>
+		<attribute>constant</attribute>
+	</object>
+	<object name="torrent">
+		<attribute>running</attribute>
+		<attribute>natural</attribute>
+		<attribute>constant</attribute>
+	</object>
+	<object name="trickle">
+		<attribute>running</attribute>
+		<attribute>natural</attribute>
+		<attribute>constant</attribute>
+	</object>
+</context>
