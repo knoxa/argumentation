@@ -109,8 +109,8 @@ public class FCATest {
 		}
 		
 		Map<String, Set<String>> context = builder.getContext();
-		assertEquals(2, context.size());
-		assertEquals(2, context.get("running").size());
+		assertEquals(3, context.size());
+		assertEquals(1, context.get("canal").size());
 		
 		builder = new ContextBuilder();
 		

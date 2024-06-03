@@ -2,7 +2,6 @@ package order;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,9 +12,9 @@ import uk.ac.kent.dover.fastGraph.NodeStructure;
 
 public class FastLattice {
 
-	public static FastGraph getGraph(Map<Integer, Set<Integer>> lattice) {
+	public static FastGraph getGraph(Map<Integer, Set<Integer>> lattice, int numNodes) {
 		
-		List<NodeStructure> nodes = makeNodes(lattice);
+		List<NodeStructure> nodes = makeNodes(numNodes);
 		List<EdgeStructure> edges = makeEdges(lattice);
 
 		nodes.sort(new Comparator<NodeStructure>() {
@@ -27,15 +26,12 @@ public class FastLattice {
 		return FastGraph.structureFactory("FCA", (byte) 0, nodes, edges, true);
 	}
 	
-	private static List<NodeStructure> makeNodes(Map<Integer, Set<Integer>> lattice) {
+	private static List<NodeStructure> makeNodes(int num) {
 	
 		List<NodeStructure> nodeStructures = new ArrayList<NodeStructure>();
-		Set<Integer> nodes = new HashSet<Integer>();
-		nodes.addAll(lattice.keySet());
-		for ( Set<Integer> value: lattice.values() )  nodes.addAll(value);
 
-		for ( Integer node: nodes ) {
-			nodeStructures.add(new NodeStructure(node, String.valueOf(node), 0, (byte) 0, (byte) 0));
+		for ( int n = 0; n < num; n++ ) {
+			nodeStructures.add(new NodeStructure(n, String.valueOf(n), 0, (byte) 0, (byte) 0));
 		}
 		
 		return nodeStructures;
