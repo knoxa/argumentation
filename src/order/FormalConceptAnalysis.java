@@ -136,46 +136,12 @@ public class FormalConceptAnalysis {
 	}
 
 	
-	private static <E> void link(List<Entry<Integer, Set<E>>> current, List<Entry<Integer, Set<E>>> previous, Map<Integer, Set<Integer>> lattice) {
-		
-		ListIterator<Entry<Integer, Set<E>>> currIter = current.listIterator();
-
-		// for each extent in the "current" list ...
-		
-		while ( currIter.hasNext() ) {
-			
-			Entry<Integer, Set<E>> c = currIter.next();
-			Set<E> fromset = c.getValue();
-			int from = c.getKey();
-			
-			ListIterator<Entry<Integer, Set<E>>> prevIter = previous.listIterator();
-			
-			while ( prevIter.hasNext() ) {
-
-				Entry<Integer, Set<E>> p = prevIter.next();
-				Set<E> toset = p.getValue();
-				int to = p.getKey();
-
-				if ( toset.containsAll(fromset) ) {
-					
-					// make a link to any extent in the "previous" list which contains it.		
-
-					Set<Integer> fm = lattice.get(from);
-					if ( fm == null )   fm = new HashSet<Integer>();
-					fm.add(to);
-					lattice.put(from, fm);
-				}
-			}
-		}
-	}
-
 	public static <A, E> Lattice<E, A> order(Map<A, Set<E>> map) {
 		
 		// The algorithm described in section 3.14 of "Introduction to Lattices and Order".
 		// Some comments below refer to the text.
 		
 		List<Entry<A, Set<E>>> eliminationOrder = FormalConceptAnalysis.eliminationOrder(map);
-		System.out.println(eliminationOrder);
 		
 		// Step 1
 		
@@ -216,7 +182,6 @@ public class FormalConceptAnalysis {
 				addAttributeToTable(attribute, attributes, tableRow);
 			}
 			
-			System.out.println("---");
 			FormalConceptAnalysis.printTable(extents, attributes);
 		}
 
@@ -224,33 +189,10 @@ public class FormalConceptAnalysis {
 		
 		// The lattice is a Map, with positions of an extent in "extents" as both keys and values.
 		// Each entry key represents a node in a lattice diagram, with its values representing capping concepts.
-		Map<Integer, Set<Integer>> lattice = new HashMap<Integer, Set<Integer>>();
 		
-		// some working data ...
-/*		Map<Integer, Set<E>> extentMap = new HashMap<Integer, Set<E>>();	
-		for ( int i = 0; i < extents.size(); i++ )  extentMap.put(i, extents.get(i));
-		
-		List<Entry<Integer, Set<E>>> tableEntries;
-		List<Entry<Integer, Set<E>>> previous = null;
-				
-		while ( ! extentMap.isEmpty() ) {
-			
-			tableEntries = new ArrayList<Entry<Integer, Set<E>>>(extentMap.entrySet());			
-			List<Entry<Integer, Set<E>>> maximalRemaining = maximal(tableEntries);
-			
-			System.out.println("maximal is " + maximalRemaining);
-			
-			if ( previous != null ) {
-				
-				link(maximalRemaining, previous, lattice);
-			}
-			previous = maximalRemaining;
-			
-			for ( Entry<Integer, Set<E>> entry: maximalRemaining ) extentMap.remove(entry.getKey());
-		}
-*/		
-		// Step 2 - NEW
-		// relate extents by set inclusion - sort by extent size first?
+		Map<Integer, Set<Integer>> preorder = new HashMap<Integer, Set<Integer>>();
+
+		// relate extents by set inclusion - more efficient sort by extent size first?
 			
 		for (int i = 0; i < extents.size(); i++ ) {
 			
@@ -258,24 +200,24 @@ public class FormalConceptAnalysis {
 				
 				if ( extents.get(i).size() < extents.get(j).size() && extents.get(j).containsAll(extents.get(i)) ) {
 					
-					Set<Integer> fmSet = lattice.get(i);
+					Set<Integer> fmSet = preorder.get(i);
 					if ( fmSet == null )   fmSet = new HashSet<Integer>();
 					fmSet.add(j);
-					lattice.put(i, fmSet);
+					preorder.put(i, fmSet);
 				}
 			}			
 		}
 		
 		// restrict to covering relations
 		
-		for ( Integer sourceNode : lattice.keySet() ) {
+		for ( Integer sourceNode : preorder.keySet() ) {
 			
 			Set<Integer> remove = new HashSet<Integer>();
-			Set<Integer> linksTo = lattice.get(sourceNode);
+			Set<Integer> linksTo = preorder.get(sourceNode);
 			
 			for (Integer targetNode: linksTo ) {
 				
-				Set<Integer> nextStep = lattice.get(targetNode);
+				Set<Integer> nextStep = preorder.get(targetNode);
 				if  ( nextStep != null ) {
 					
 					nextStep.retainAll(linksTo);
@@ -286,12 +228,9 @@ public class FormalConceptAnalysis {
 			linksTo.removeAll(remove);
 		}
 		
-		
-		//
-		
-		// Limit objects to the earliest concept - Move this?
+		// Limit objects to the earliest concept
 
-/*		FastGraph graph = FastLattice.getGraph(lattice, extents.size());
+		FastGraph graph = FastLattice.getGraph(preorder, extents.size());
 		List<Set<E>> belowList = new ArrayList<Set<E>>();
 		
 		for ( int i = 0; i < extents.size(); i++ ) {
@@ -306,14 +245,12 @@ public class FormalConceptAnalysis {
 			Set<E> extent = extents.get(i);
 			extent.removeAll(belowList.get(i));
 		}
-*/		
-		//
 		
+		// return results	
 		Lattice<E, A> result = new Lattice<E, A>();
 		result.setExtents(extents);
 		result.setAttributes(attributes);
-		result.setPreorder(lattice);
-	
+		result.setPreorder(preorder);	
 		return result;
 	}
 
