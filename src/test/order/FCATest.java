@@ -1,4 +1,4 @@
-package test.lattice;
+package test.order;
 
 import static org.junit.Assert.assertEquals;
 
