@@ -181,8 +181,6 @@ public class FormalConceptAnalysis {
 				// (1.2.2)
 				addAttributeToTable(attribute, attributes, tableRow);
 			}
-			
-			FormalConceptAnalysis.printTable(extents, attributes);
 		}
 
 		// Step 2 - linking rows of the extents and attributes table to make a lattice
@@ -265,7 +263,11 @@ public class FormalConceptAnalysis {
 	
 	public static <A, E> void serializeAsGraphML(Map<Integer, Set<Integer>> lattice, List<Set<E>> extents, Map<Integer, Set<A>> attributes, ContentHandler ch) throws SAXException {
 		
- 		ch.startDocument();
+ 		// TO DO: Make this work off a Lattice object
+		
+		// Maybe change this? Serialize to a specific Lattice XML (for easier follow-on processing), then XSL trnasfor that to Graph ML
+		
+		ch.startDocument();
 		ch.startElement(GraphUtils.GRAPHML_NAMESPACE, "graphml", "graphml", new AttributesImpl());
 		
 		AttributesImpl idlAttr = new AttributesImpl();

@@ -29,6 +29,7 @@ import argumentation.presumptive.Analysis;
 import argumentation.presumptive.PresumptiveAAF;
 import order.ContextBuilder;
 import order.FormalConceptAnalysis;
+import order.Lattice;
 import test.argumentation.DummyArgumentMap;
 import uk.ac.kent.dover.fastGraph.FastGraph;
 
@@ -56,11 +57,23 @@ public class FCATest {
 	public void eliminationOrder() {
 		
 		List<Entry<Integer, Set<String>>> order1 = FormalConceptAnalysis.eliminationOrder(textbook);
-		System.out.println(order1);
-		List<Entry<String, Set<Set<Integer>>>> order2 = FormalConceptAnalysis.eliminationOrder(acceptable);
-		System.out.println(order2);
+
+		assertEquals((Integer) 1, (Integer) order1.get(0).getKey());
+		assertEquals(5, order1.get(0).getValue().size());
 		
-		FormalConceptAnalysis.order(textbook);
+		assertEquals((Integer) 4, (Integer) order1.get(2).getKey());
+		assertEquals(4, order1.get(2).getValue().size());
+
+		List<Entry<String, Set<Set<Integer>>>> order2 = FormalConceptAnalysis.eliminationOrder(acceptable);
+
+		assertEquals("I-4", order2.get(0).getKey());
+		assertEquals(1, order2.get(0).getValue().size());
+		
+		assertEquals("I-3", order2.get(2).getKey());
+		assertEquals(1, order2.get(2).getValue().size());
+		
+		Lattice<String, Integer> l = FormalConceptAnalysis.order(textbook);
+		assertEquals(10, l.getExtents().size());
 	}
 	
 	@Test
@@ -119,7 +132,7 @@ public class FCATest {
 			SAXParser parser = factory.newSAXParser();
 			XMLReader reader = parser.getXMLReader();
 			reader.setContentHandler(builder);
-			reader.parse("src\\test\\lattice\\water.xml");
+			reader.parse("src\\test\\order\\water.xml");
 		}
 		catch (ParserConfigurationException | SAXException e) {
 			e.printStackTrace();
