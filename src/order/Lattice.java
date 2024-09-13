@@ -70,11 +70,14 @@ public class Lattice<E, A> {
 				
 				for ( E object: objectSet ) {
 					
-					attr = new AttributesImpl();
-					ch.startElement("", "object", "object", attr);
-					String value = object.toString();
-					ch.characters(value.toCharArray(), 0, value.length());
-					ch.endElement("", "object", "object");
+					if ( object != null ) {
+						
+						attr = new AttributesImpl();
+						ch.startElement("", "object", "object", attr);
+						String value = object.toString();
+						ch.characters(value.toCharArray(), 0, value.length());
+						ch.endElement("", "object", "object");
+					}
 				}
 			}
 						
