@@ -216,6 +216,13 @@ public class LinkedArgumentMap implements FastArgumentMap {
  		return labels;
  	}
     
+ 	public Set<Resource> getResourcesForLabels(Set<String> labels) {
+ 		
+ 		Set<Resource> resources = new HashSet<Resource>();		
+ 		for ( String label: labels ) resources.add(labelToResource.get(label));		
+ 		return resources;
+ 	}
+    
     public void validate() {
     	
     	if ( model == null ) {
