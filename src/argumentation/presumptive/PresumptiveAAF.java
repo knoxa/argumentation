@@ -25,6 +25,8 @@ public class PresumptiveAAF {
 
 	public static FastGraph makeArgumentFramework(FastGraph aif, Comparator<Integer> preference) {
 		
+		if ( preference == null ) preference = new PreferenceDefault();
+		
 		// The arguments are the RA-Nodes and CA-Nodes
 		int[] arguments = IntStream.range(0, aif.getNumberOfNodes()).filter(x -> (aif.getNodeType(x) == FastArgumentMap.RA_NODE) || (aif.getNodeType(x) == FastArgumentMap.CA_NODE) || (aif.getNodeType(x) == FastArgumentMap.MA_NODE)).toArray();
 
@@ -58,7 +60,7 @@ public class PresumptiveAAF {
 
 				int attackedNode = nodeMap.get(aif.getNodeLabel(attacked));
 				
-				if (preference.compare(attacker, attacked) >= 0) {
+				if ( preference.compare(attacker, attacked) >= 0 ) {
 					
 					edges.add(new EdgeStructure(edgeIndex++, "", 0, (byte) 0, (byte) 0, attackerNode, attackedNode));
 				}				
