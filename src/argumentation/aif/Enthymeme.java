@@ -70,7 +70,17 @@ public class Enthymeme {
 			}
 		}
 		
-		Set<Integer> wantedNodes = IntStream.range(0, numNodes)
+		// An undercutting CA-node is not wanted if the RA-node it attacks is unwanted
+		
+		for (int n = 0; n < numNodes; n++) {
+			
+			if (aif.getNodeType(n) == FastArgumentMap.CA_NODE && labels[n] == WANTED ) {
+				
+				if ( labels[aif.getNodeConnectingOutNodes(n)[0]] == UNWANTED )  labels[n] = UNWANTED;
+			}	
+		}
+
+			Set<Integer> wantedNodes = IntStream.range(0, numNodes)
 				.filter(x -> labels[x] == WANTED)
 				.boxed().collect(Collectors.toSet());
 
