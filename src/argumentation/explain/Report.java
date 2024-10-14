@@ -47,9 +47,7 @@ public class Report {
 	}
 
 	
-	public static void printArguments(FastArgumentMap aif, PrintWriter out) {
-		
-		FastGraph graph = aif.getGraph();
+	public static void printArguments(FastGraph graph, PrintWriter out) {
 		
 		for (int i = 0; i < graph.getNumberOfNodes(); i++ ) {
 			
@@ -64,6 +62,12 @@ public class Report {
 				out.printf("%6s: %s => %s\n", label, premises, conclusion);
 			}
 		}
+	}
+
+	
+	public static void printArguments(FastArgumentMap aif, PrintWriter out) {
+
+		printArguments(aif.getGraph(), out);
 	}
 	
 	
