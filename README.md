@@ -8,6 +8,8 @@ I want to reason about _argument maps_ expressed as Argument Interchange Format 
 
 Argument maps and frameworks are *graphs*. I use **Dover**<sup> [5]</sup> for modelling and manipulating graphs.
 
+I want to *order* arguments and extensions to support preferences and explanation, so I've implemented a [Formal Concept Analysis](https://en.wikipedia.org/wiki/Formal_concept_analysis) algorithm<sup> [6]</sup>. This is general purpose, and can be used independently of the argumentation code.
+
 ### References 
 
 1.	Samer Nofal, Katie Atkinson, Paul E. Dunne. 
@@ -19,6 +21,8 @@ DOI: [10.1016/j.ijar.2016.07.013](https://doi.org/10.1016/j.ijar.2016.07.013).
 
 1. See: [Contributing to the Argument Interchange Format](http://www.arg.tech/index.php/research/contributing-to-the-argument-interchange-format/), ARG-tech
 
-1. Knox, A., "Explaining presumptive arguments", _Dstl Technical Memo_ (2022), [https://dstl.github.io/eleatics/argumentation/explain-framework.pdf](https://dstl.github.io/eleatics/argumentation/explain-framework.pdf)
+1. Knox, A. "Explaining presumptive arguments", _Dstl Technical Memo_ (2022), [https://dstl.github.io/eleatics/argumentation/explain-framework.pdf](https://dstl.github.io/eleatics/argumentation/explain-framework.pdf)
 
 1. Baker, Rob, Alena Frankel, and Peter Rodgers. "Dover: Scalable Algorithms for Graph Mining in Java." (2017). See: [https://www.cs.kent.ac.uk/projects/dover/](https://www.cs.kent.ac.uk/projects/dover/)
+
+1. Davey, B. A., Priestley, H. A. "Introduction to Lattices and Order." _Cambridge University Press_ (2002).
