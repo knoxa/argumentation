@@ -1,7 +1,10 @@
 package argumentation.explain;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,7 +26,7 @@ public class Report {
         
         for (Set<Integer> extension: extensions ) {
         	
- 	 	   out.printf("Extension %d is: %s\n", ++n, extension);
+ 	 	   out.printf("\nExtension %d is: %s\n", ++n, extension);
  	 	   out.printf("... with labels: %s\n", FastMapUtils.extensionLabels(framework, extension));
  	 	   
  	 	   Set<String> acceptable = Analysis.getAcceptableInformation(graph, framework, extension);
@@ -39,8 +42,10 @@ public class Report {
 	public static void printClaims(FastArgumentMap aif, PrintWriter out) {
 		
 		Map<String, String> claims = aif.getClaimText();
+		List<String> labels = new ArrayList<String>(); labels.addAll(claims.keySet());
+		Collections.sort(labels);
 		
-		for ( String label: claims.keySet() ) {
+		for ( String label: labels ) {
 			
 			out.printf("%5s: %s\n", label, claims.get(label));
 		}
