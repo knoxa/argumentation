@@ -57,8 +57,9 @@ public class PresumptiveAAF {
 			int attackerNode = nodeMap.get(aif.getNodeLabel(attacker));
 			
 			for ( int attacked: attackedSet ) {
-
-				int attackedNode = nodeMap.get(aif.getNodeLabel(attacked));
+				
+				String label = aif.getNodeLabel(attacked);
+				int attackedNode = nodeMap.get(label);
 				
 				if ( preference.compare(attacker, attacked) >= 0 ) {
 					
@@ -121,6 +122,7 @@ public class PresumptiveAAF {
 		attacked.addAll(
 		Arrays.stream(sharingConclusion)
 			.filter( x -> (aif.getNodeType(x) != FastArgumentMap.I_NODE) && (aif.getNodeType(x) != FastArgumentMap.L_NODE) )
+			.filter( x -> (aif.getNodeType(x) != FastArgumentMap.TA_NODE) && (aif.getNodeType(x) != FastArgumentMap.YA_NODE) )
 			.filter( x -> aif.getNodeType(x) != attackerType )
 			.mapToObj(x -> new Integer(x))
 			.collect(Collectors.toSet())
