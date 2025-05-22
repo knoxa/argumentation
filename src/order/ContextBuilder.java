@@ -16,9 +16,11 @@ public class ContextBuilder implements ContentHandler {
 	String objectName = null;
 	StringBuffer attributeText;
 	Boolean inAttribute = false;
+	private int objectNumber;
 
 	public ContextBuilder() {
 
+		objectNumber = 0;
 	}
 
 	@Override
@@ -95,6 +97,7 @@ public class ContextBuilder implements ContentHandler {
 		else if ( qName.equals("object") ) {
 			
 			objectName = attr.getValue("name");
+			if ( objectName == null ) objectName = String.valueOf(++objectNumber);
 		}
 		else if ( qName.equals("attribute") ) {
 			

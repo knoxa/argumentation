@@ -265,7 +265,7 @@ public class FormalConceptAnalysis {
 		
  		// TO DO: Make this work off a Lattice object
 		
-		// Maybe change this? Serialize to a specific Lattice XML (for easier follow-on processing), then XSL trnasfor that to Graph ML
+		// Maybe change this? Serialize to a specific Lattice XML (for easier follow-on processing), then XSL transform that to Graph ML
 		
 		ch.startDocument();
 		ch.startElement(GraphUtils.GRAPHML_NAMESPACE, "graphml", "graphml", new AttributesImpl());
